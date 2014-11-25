@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+     android:layout_width="match_parent"
+     android:layout_height="50dp"
+     android:gravity="center_vertical"
+     android:orientation="horizontal" >
+     
+    <ImageView
+        android:layout_marginLeft="10dp"
+        android:src="@drawable/station"
+        android:layout_height="50dp" 
+        android:layout_width="50dp"
+        />
+<TextView 
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:text="station1"
+    android:layout_height="wrap_content"
+    android:layout_width="wrap_content"
+    android:id="@+id/dropdown_station_name"
+    android:textColor="#000000"
+    android:singleLine="true"
+    android:paddingLeft="@dimen/padding_4dp"
+    android:textSize="@dimen/text_size_18"
+
+    android:ellipsize="marquee" />
+</LinearLayout>

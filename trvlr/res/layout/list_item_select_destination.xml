@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="300dp"
+    android:minHeight="95dp"
+    android:orientation="horizontal" >
+
+    <RelativeLayout
+        android:id="@+id/asdas"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent" >
+
+        <ImageView
+            android:id="@+id/train_tracks_imae"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:paddingLeft="-30dp"
+            android:paddingRight="-80dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/train_tracks" />
+
+        <ImageView
+            android:id="@+id/destination_dot"
+            android:layout_width="55dp"
+            android:layout_height="40dp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/prev_next_station" />
+       
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/destination_distance"
+        android:layout_width="140dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_marginRight="-100dp"
+        android:gravity="start"
+        android:paddingLeft="50dp"
+        android:rotation="-90"
+        android:text="sdfsdasdasdasdasdasf"
+        android:textColor="#E7492B"
+        android:textSize="@dimen/text_size_14"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_weight="1.0"
+        android:gravity="start"
+        android:orientation="vertical"
+        android:paddingLeft="30dp" >
+
+        <TextView
+            android:id="@+id/destination_station_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#3366FF"
+            android:textSize="@dimen/text_size_22"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/destination_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="#3366FF"
+            android:textSize="@dimen/padding_16dp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,100 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/track_bw"
+    android:orientation="vertical" >
+    
+    <LinearLayout 
+           android:background="#3366FF"
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+        
+        
+        <ImageView
+            android:id="@+id/activity_destination_share"
+            android:layout_gravity="center"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/share" 
+            />
+
+    <LinearLayout
+        android:layout_weight="1.0"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+     
+        android:gravity="center"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/activity_select_destination_train_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Select Destination"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_22" />
+
+        <TextView
+            android:id="@+id/activity_select_destination_train_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Select Destination"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_22" />
+    </LinearLayout>
+      <ImageView
+            android:layout_gravity="center"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/info" 
+            />
+    
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1.0"
+        android:background="#80ffffff"
+        android:orientation="vertical" >
+
+        <ListView
+            android:id="@+id/activity_destination_listview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@null"
+            android:dividerHeight="-8dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:visibility="gone"
+        android:id="@+id/activity_destination_bottom_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="#9B3823"
+        android:gravity="center"
+        android:orientation="vertical" >
+
+        <TextView
+            android:gravity="center"
+            android:id="@+id/activity_destination_bottom_sation_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="adfasdf"
+            android:textColor="#ffffff"
+            android:textSize="@dimen/text_size_18" />
+        <TextView
+            android:gravity="center"
+            android:id="@+id/activity_destination_bottom_estimated_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="adfasdf"
+            android:textColor="#ffffff"
+            android:textSize="@dimen/text_size_18" />
+    </LinearLayout>
+
+</LinearLayout>

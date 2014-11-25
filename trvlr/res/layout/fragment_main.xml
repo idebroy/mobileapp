@@ -1,0 +1,48 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#9B3823"
+  
+    >
+    <TextView
+        android:gravity="center"
+        android:layout_gravity="center_vertical"
+         android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Change Origin" 
+            android:textSize="@dimen/text_size_20"
+            android:textColor="@color/white"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:orientation="horizontal">
+        <TextView
+            android:text="Type Station Name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:textColor="#ffffff"
+            android:layout_weight="2"/>
+        <AutoCompleteTextView
+            android:id="@+id/srcStation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#ffffff"
+            android:layout_weight="1"/>
+    </LinearLayout>
+    
+    <Button
+        android:textColor="@color/white"
+        android:text="Done"
+        android:layout_gravity="center"
+        android:id="@+id/fragment_main_done"
+         android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        />
+   
+   
+</LinearLayout>
