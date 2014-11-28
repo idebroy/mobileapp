@@ -1,0 +1,17 @@
+  <RelativeLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="52dp"
+        android:background="#03A9F4"
+        android:gravity="center"
+      >
+
+        <TextView
+            android:id="@+id/action_bar_home_title"
+            android:layout_width="wrap_content"
+            android:layout_height="52dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="Trvlr"
+            android:textColor="#ffffff"
+            android:textSize="@dimen/text_size_22" />
+    </RelativeLayout>

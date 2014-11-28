@@ -2,6 +2,7 @@ package com.idr.trvlr;
 
 import java.util.List;
 
+import android.app.ActionBar;
 import android.app.DialogFragment;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -41,18 +42,29 @@ public class HomeActivity extends FragmentActivity  {
 	double longitude; // longitude
 	private static RouteDataSource mDataSource;
 	public String originStationName;
+	public TextView actionBarTitle;
 
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home);
+
+		getActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+		getActionBar().setCustomView(R.layout.action_bar_view);
 		getActionBar().hide();
+
+		actionBarTitle = (TextView) findViewById(R.id.action_bar_home_title);
 		getSupportFragmentManager().beginTransaction().replace(R.id.activity_home_frame, new HomeFragment()).addToBackStack(null).commit();
 	}
 
 
-
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		actionBarTitle.setText("Trvlr");
+	}
 
 
 
@@ -129,14 +141,14 @@ public class HomeActivity extends FragmentActivity  {
 			SuggestionAdapter suggestionAdapter = new SuggestionAdapter(this.getActivity().getApplicationContext(),
 					Utils.getAllTrainStationsCursor(this.getActivity().getApplicationContext(),trainDbOpenHelper),
 					trainDbOpenHelper);
-			
-		//	Utils.getAllTrainStations(ctx, trainDbOpenHelper)
+
+			//	Utils.getAllTrainStations(ctx, trainDbOpenHelper)
 
 			srcStation.setAdapter(suggestionAdapter);
 			setStyle(DialogFragment.STYLE_NORMAL, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
 			WindowManager.LayoutParams wmlp = getDialog().getWindow().getAttributes();
 
-		//	wmlp.gravity = Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL;
+			//	wmlp.gravity = Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL;
 
 
 			// listener to done button
@@ -155,11 +167,12 @@ public class HomeActivity extends FragmentActivity  {
 			return rootView;
 		}
 	}
-	
+
 	// replace "select origin screen"
 	public void replceFragment()
 	{
-		
+
+		actionBarTitle.setText("Select Origin");
 		getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.entry, R.anim.exit,R.anim.pop_enter,R.anim.pop_exit).replace(R.id.activity_home_frame, new ChooseOriginFragment()).addToBackStack(null).commit();
 	}
 
@@ -176,6 +189,6 @@ public class HomeActivity extends FragmentActivity  {
 	public void setOriginStationName(String originStationName) {
 		this.originStationName = originStationName;
 	}
-	
-	
+
+
 }

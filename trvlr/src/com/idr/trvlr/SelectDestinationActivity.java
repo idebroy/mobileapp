@@ -61,6 +61,7 @@ public class SelectDestinationActivity extends Activity  implements LocationList
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_select_destination);
 
+		
 		getActionBar().hide();
 
 		// Initialization
@@ -105,6 +106,8 @@ public class SelectDestinationActivity extends Activity  implements LocationList
 			if(routePointArray.get(i).getDescription().equalsIgnoreCase(sourceStation))
 			{
 				trainArrivalTime = routePointArray.get(i).getScheduleTime();
+				
+				Log.d("SelectDestination","calculate train arrival time :"+trainArrivalTime);
 			}
 		}
 
@@ -217,12 +220,12 @@ public class SelectDestinationActivity extends Activity  implements LocationList
 	@Override
 	public void onLocationChanged(Location location) {
 		// TODO Auto-generated method stub
-
+		Log.d("SelectDestinationActivity","OnLocationChanged");
 		// get current location for the first time
 		if(count==0)
 		{
 
-			Log.d("SelectDestinationActivity","OnLocationChanged");
+			Log.d("SelectDestinationActivity","count : "+count);
 			count++;
 			lat = location.getLatitude();
 			lon = location.getLongitude();
@@ -235,9 +238,14 @@ public class SelectDestinationActivity extends Activity  implements LocationList
 
 		else
 		{
+			
+			Log.d("SelectDestinationActivity", "currentDateandTime : "+currentDateandTime+" trainArrivalTime  : "+trainArrivalTime);
 
 			if(currentDateandTime > trainArrivalTime)
 			{
+				
+			
+				
 
 				//double distance =  Utils.calculateDistanceInFLoat(lat, lon, location.getLatitude(), location.getLongitude());
 				double distanceBetweenTwoLocation =  currentLocation.distanceTo(location);
@@ -322,5 +330,14 @@ public class SelectDestinationActivity extends Activity  implements LocationList
 	public void onStatusChanged(String provider, int status, Bundle extras) {
 		// TODO Auto-generated method stub
 
+	}
+	
+	@Override
+	protected void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+		
+		Log.d("SelectDestinationActivity", "On Pause");
+		locationManager.removeUpdates(this);
 	}
 }

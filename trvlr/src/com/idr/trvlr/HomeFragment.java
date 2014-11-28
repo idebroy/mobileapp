@@ -40,11 +40,14 @@ public class HomeFragment extends Fragment implements LocationListener{
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View v = inflater.inflate(R.layout.fragment_home, null);
-
+	
 	
 		
 		/*Initialization*/
 		activity = (HomeActivity) getActivity();
+		activity.actionBarTitle.setText("Trvlr");
+		
+		
 
 
 
@@ -52,12 +55,20 @@ public class HomeFragment extends Fragment implements LocationListener{
 		findTrainsLayout = (LinearLayout) v.findViewById(R.id.activity_home_select_train_button);
 		locationManager = (LocationManager)getActivity(). getSystemService(Context.LOCATION_SERVICE);
 		boardingStationLayout = (LinearLayout) v.findViewById(R.id.boarding_station_layout);
-		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+		
 		locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
+		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
 
 		if(locationManager!=null)
 		{
+			if(locationManager.isProviderEnabled( LocationManager.GPS_PROVIDER ))
+			{
 			location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+			}
+			else
+			{
+				location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+			}
 		}
 		
 		if ( !locationManager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
@@ -124,7 +135,7 @@ public class HomeFragment extends Fragment implements LocationListener{
 		// TODO Auto-generated method stub
 
 
-		//Log.d("HomeFragment", "location changed");
+		Log.d("HomeFragment", "location changed");
 
 		this.location = location;
 		displayCurrentStation();
@@ -133,12 +144,16 @@ public class HomeFragment extends Fragment implements LocationListener{
 	@Override
 	public void onProviderDisabled(String provider) {
 		// TODO Auto-generated method stub
+		
+		Log.d("HomeFragment", "provider disbled : "+provider);
 
 	}
 
 	@Override
 	public void onProviderEnabled(String provider) {
 		// TODO Auto-generated method stub
+		
+		Log.d("HomeFragment", "provider enabled : "+provider);
 
 	}
 

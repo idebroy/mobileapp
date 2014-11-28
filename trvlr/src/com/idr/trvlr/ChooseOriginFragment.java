@@ -33,6 +33,7 @@ public class ChooseOriginFragment extends Fragment {
 	private SearchView changeOriginListview;
 	private AutoCompleteTextView chooseOriginTextview;
 	private Button doneButton;
+
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -80,6 +81,12 @@ public class ChooseOriginFragment extends Fragment {
 		});
 		
 		return v;
+	}
+	
+	@Override
+	public void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
 	}
 
 }
