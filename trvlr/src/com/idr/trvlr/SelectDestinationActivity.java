@@ -15,10 +15,12 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -55,24 +57,29 @@ public class SelectDestinationActivity extends Activity  implements LocationList
 	private int distanceBetweenSourceDestination;
 	private long currentDateandTime;
 	private long trainArrivalTime;
+	private LinearLayout enterCoachLayout;
+	private TextView coachNoView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_select_destination);
 
-		
+
 		getActionBar().hide();
 
 		// Initialization
 		selectDestinationListView = (ListView) findViewById(R.id.activity_destination_listview);
 		trainName = (TextView) findViewById(R.id.activity_select_destination_train_name);
 		trainNumber = (TextView) findViewById(R.id.activity_select_destination_train_number);
+		enterCoachLayout =  (LinearLayout) findViewById(R.id.activity_destination_enter_coach_layout);
 
 		bottomLayout = (LinearLayout) findViewById(R.id.activity_destination_bottom_layout);
 		bottomStationName = (TextView) findViewById(R.id.activity_destination_bottom_sation_name);
 		bottomArrivalTime = (TextView) findViewById(R.id.activity_destination_bottom_estimated_time);
 		shareIcon = (ImageView) findViewById(R.id.activity_destination_share);
+		
+		coachNoView = (TextView) findViewById(R.id.activity_destination_coach_number);
 
 
 		locationManager =(LocationManager)SelectDestinationActivity.this.getSystemService(Context.LOCATION_SERVICE);
@@ -81,7 +88,7 @@ public class SelectDestinationActivity extends Activity  implements LocationList
 
 		// getting intent
 		Intent intent = getIntent();
-		
+
 		routePointArray = new ArrayList<RoutePoint>();
 		routePointArray.clear();
 		routePointArray.addAll((ArrayList<RoutePoint>) getIntent().getSerializableExtra("array"));
@@ -99,21 +106,21 @@ public class SelectDestinationActivity extends Activity  implements LocationList
 		// get current time
 		Calendar calender = Calendar.getInstance();
 		currentDateandTime = calender.getTimeInMillis();
-		
+
 		// get  scheduled arrival time on source station
 		for(int i=0;i<routePointArray.size();i++)
 		{
 			if(routePointArray.get(i).getDescription().equalsIgnoreCase(sourceStation))
 			{
 				trainArrivalTime = routePointArray.get(i).getScheduleTime();
-				
+
 				Log.d("SelectDestination","calculate train arrival time :"+trainArrivalTime);
 			}
 		}
 
 
 
-		
+
 		/*
 		 * listner on share icon*/
 		shareIcon.setOnClickListener(new OnClickListener() {
@@ -122,13 +129,49 @@ public class SelectDestinationActivity extends Activity  implements LocationList
 			public void onClick(View v) {
 				Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
 				sharingIntent.setType("text/plain");
+				sharingIntent.putExtra(Intent.EXTRA_TEXT, "Using Trvlr App");
 				startActivity(Intent.createChooser(sharingIntent, "Share via"));
 
 			}
 		});
 
 
+		/*
+		 * listner to enter coach layout*/
+		enterCoachLayout.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				LayoutInflater li = LayoutInflater.from(SelectDestinationActivity.this);
+				View dialogView = li.inflate(R.layout.dialog_select_coach, null);
+				
+				AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+						SelectDestinationActivity.this);
+ 
+				// set prompts.xml to alertdialog builder
+				alertDialogBuilder.setView(dialogView);
+ 
+				final EditText selectCoach = (EditText) dialogView.findViewById(R.id.select_coach);
+				final EditText selectBerth = (EditText) dialogView.findViewById(R.id.select_berth);
+				
+				
+				alertDialogBuilder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+				
+						dialog.dismiss();
+						enterCoachLayout.setVisibility(View.GONE);
+						coachNoView.setVisibility(View.VISIBLE);
+						coachNoView.setText(""+selectCoach.getText().toString() + " | "+selectBerth.getText().toString());
+					}
+				});
 
+				AlertDialog alertDialog = alertDialogBuilder.create();
+				alertDialog.show();
+			}
+		});
 
 		// listview on item select
 		selectDestinationListView.setOnItemClickListener(new OnItemClickListener() {
@@ -137,6 +180,8 @@ public class SelectDestinationActivity extends Activity  implements LocationList
 			public void onItemClick(AdapterView<?> arg0, final View view, final int position,
 					long arg3) {
 				// TODO Auto-generated method stub
+				enterCoachLayout.setVisibility(View.VISIBLE);
+				
 				if(routePointArray.get(position).getDescription().equalsIgnoreCase(sourceStation))
 				{
 					Toast.makeText(SelectDestinationActivity.this, "Sorry your origin cannot be your destination",Toast.LENGTH_LONG).show();
@@ -238,14 +283,30 @@ public class SelectDestinationActivity extends Activity  implements LocationList
 
 		else
 		{
-			
+
 			Log.d("SelectDestinationActivity", "currentDateandTime : "+currentDateandTime+" trainArrivalTime  : "+trainArrivalTime);
+
+
+			SimpleDateFormat dateFormatOld = new SimpleDateFormat("dd MM yyyy hh:mm:ss aa");
+			Calendar calendarOld = Calendar.getInstance();
+
+
+			//	calendar.setTime(date)
+			calendarOld.setTimeInMillis((long) currentDateandTime);
+			String timeCurrent =  dateFormatOld.format(calendarOld.getTime());
+
+			calendarOld.setTimeInMillis((long) trainArrivalTime);
+			String arrivalTime =  dateFormatOld.format(calendarOld.getTime());
+
+
+			Log.d("SelectDestinationActivity", "currentDateandTime : "+timeCurrent+" trainArrivalTime  : "+arrivalTime);
+
 
 			if(currentDateandTime > trainArrivalTime)
 			{
-				
-			
-				
+
+
+
 
 				//double distance =  Utils.calculateDistanceInFLoat(lat, lon, location.getLatitude(), location.getLongitude());
 				double distanceBetweenTwoLocation =  currentLocation.distanceTo(location);
@@ -253,7 +314,7 @@ public class SelectDestinationActivity extends Activity  implements LocationList
 				currentLocation = location;
 
 				//bottomLayout.setVisibility(View.VISIBLE);
-			//	bottomStationName.setText(""+distanceBetweenTwoLocation + "meter"+"  "+ location.getLatitude()+","+location.getLongitude());
+				//	bottomStationName.setText(""+distanceBetweenTwoLocation + "meter"+"  "+ location.getLatitude()+","+location.getLongitude());
 
 
 				// calculate speed of train
@@ -299,7 +360,7 @@ public class SelectDestinationActivity extends Activity  implements LocationList
 					String time =  dateFormat.format(calendar.getTime());
 
 					bottomArrivalTime.setText("Expected Arrival : "+ time);
-					
+
 					Log.d("SelectDestinationActivity", "distance between source and location : "+ distanceBetweenSourceDestination);
 
 				}
@@ -331,12 +392,12 @@ public class SelectDestinationActivity extends Activity  implements LocationList
 		// TODO Auto-generated method stub
 
 	}
-	
+
 	@Override
 	protected void onPause() {
 		// TODO Auto-generated method stub
 		super.onPause();
-		
+
 		Log.d("SelectDestinationActivity", "On Pause");
 		locationManager.removeUpdates(this);
 	}
