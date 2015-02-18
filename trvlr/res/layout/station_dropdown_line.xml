@@ -13,13 +13,13 @@
         android:layout_width="50dp"
         />
 <TextView 
+    android:textColor="#3D7DF0"
     android:layout_gravity="center"
     android:gravity="center"
     android:text="station1"
     android:layout_height="wrap_content"
     android:layout_width="wrap_content"
     android:id="@+id/dropdown_station_name"
-    android:textColor="#000000"
     android:singleLine="true"
     android:paddingLeft="@dimen/padding_4dp"
     android:textSize="@dimen/text_size_18"

@@ -5,70 +5,134 @@
     android:minHeight="95dp"
     android:orientation="horizontal" >
 
-    <RelativeLayout
-        android:id="@+id/asdas"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent" >
+    <FrameLayout
+        android:layout_width="70dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center" >
 
         <ImageView
             android:id="@+id/train_tracks_imae"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginLeft="10dp"
-            android:paddingLeft="-30dp"
-            android:paddingRight="-80dp"
-            android:scaleType="fitXY"
-            android:src="@drawable/train_tracks" />
+            android:layout_gravity="center"
+            android:src="@drawable/destination_black_track" />
+
+        <ImageView
+            android:id="@+id/prev_next_station"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/destination_black_dot" />
+
+        <ImageView
+            android:id="@+id/current_station"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/current_station" />
 
         <ImageView
             android:id="@+id/destination_dot"
-            android:layout_width="55dp"
-            android:layout_height="40dp"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:src="@drawable/prev_next_station" />
-       
-    </RelativeLayout>
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/current_destination"
+            android:visibility="gone" />
 
-    <TextView
-        android:id="@+id/destination_distance"
-        android:layout_width="140dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:layout_marginRight="-100dp"
-        android:gravity="start"
-        android:paddingLeft="50dp"
-        android:rotation="-90"
-        android:text="sdfsdasdasdasdasdasf"
-        android:textColor="#E7492B"
-        android:textSize="@dimen/text_size_14"
-        android:textStyle="bold" />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:src="@drawable/current_station"
+            android:visibility="gone" />
+    </FrameLayout>
 
     <LinearLayout
+        android:layout_weight="1.0"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_weight="1.0"
-        android:gravity="start"
-        android:orientation="vertical"
-        android:paddingLeft="30dp" >
+        android:orientation="vertical" >
+        <RelativeLayout
+              android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+         <TextView 
+             android:visibility="gone"
+             android:paddingBottom="10dp"
+              android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/destination_bottom_border"
+            
+            />
 
         <TextView
+          android:paddingTop="@dimen/padding_4dp"
+            android:id="@+id/destination_distance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="sdfsdasdasdasdasdasf"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size_12"
+            android:textStyle="normal" />
+      
+          <TextView 
+              android:visibility="gone"
+              android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/destination_upper_border"
+            android:paddingTop="10dp"
+            />
+          </RelativeLayout>
+        
+        <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:layout_marginTop="6dp"
+        android:gravity="start"
+        android:orientation="vertical"
+        android:paddingLeft="60dp" >
+         
+      
+
+        <TextView
+            android:gravity="start"
+            android:layout_gravity="start"
+            android:text="dasd"
             android:id="@+id/destination_station_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#3366FF"
+            android:lines="1"
+            android:maxLines="1"
+            android:textColor="@color/black"
             android:textSize="@dimen/text_size_22"
-            android:textStyle="bold" />
+            android:textStyle="normal" />
 
         <TextView
+            android:layout_gravity="start"
             android:id="@+id/destination_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:textColor="#3366FF"
+            android:gravity="start"
+             android:textColor="@color/black"
             android:textSize="@dimen/padding_16dp"
             android:textStyle="bold" />
     </LinearLayout>
+      
+    </LinearLayout>
+
+    <ImageView
+        android:layout_marginTop="@dimen/padding_16dp"
+        android:id="@+id/destination_alarm_image"
+        android:layout_gravity="center"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:padding="10dp"
+        android:src="@drawable/destination_alarm_on" 
+        />
 
 </LinearLayout>

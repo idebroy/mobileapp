@@ -227,11 +227,11 @@ public class Utils  {
 					String aArrivalStr = trainCursor.getString(2);
 					int dayOffset = trainCursor.getInt(3);
 
-					long startOfday = getStartOfDay(new Date())+dayOffset*24*3600*1000;
+					long startOfday = getStartOfDay(new Date());//+dayOffset*24*3600*1000;
 					String[] hrAndminute = aArrivalStr.split("\\:");
 					int hour = Integer.parseInt(hrAndminute[0]);
 					int minute = Integer.parseInt(hrAndminute[1]);
-					long arrivalTime = startOfday+3600*1000*hour+60*1000*minute;
+					long arrivalTime = 3600*1000*hour+60*1000*minute;
 
 					double[] coor = getStationLatLong(ctx, aSName);
 					if( coor != null ) {
@@ -287,7 +287,7 @@ public class Utils  {
 					lat = trainCursor.getDouble(4);
 					lon = trainCursor.getDouble(5);
 
-					long startOfday = getStartOfDay(new Date())+dayOffset*24*3600*1000;
+					long startOfday = getStartOfDay(new Date());//+dayOffset*24*3600*1000;
 					String[] hrAndminute = aArrivalStr.split("\\:");
 					int hour = Integer.parseInt(hrAndminute[0]);
 					int minute = Integer.parseInt(hrAndminute[1]);

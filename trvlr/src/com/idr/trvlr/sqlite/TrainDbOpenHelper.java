@@ -7,6 +7,7 @@ import java.io.OutputStream;
 import java.io.Serializable;
 import java.util.List;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -29,6 +30,37 @@ public class TrainDbOpenHelper extends SQLiteOpenHelper implements Serializable 
 	public static final String DISTANCE_FROM_PREV_STOP="distance";
 	public static final String INCLUDE_IN_TRIP="include";
 
+
+	// colums names of synch_data
+	public static final String TABLE_SYNC_DATA = "sync_data";
+	public static final String COLUMN_SYNC_ID="_id";
+	public static final String COLUMN_SYNC_PHONE_NO="phone_number";
+	public static final String COLUMN_SYNC_TRAIN_NO="train_number";
+	public static final String COLUMN_SYNC_DATE="date_time";
+	public static final String COLUMN_SYNC_LONGITUDE = "longitude";
+	public static final String COLUMN_SYNC_LATITUDE = "latitude";
+	public static final String COLUMN_SYNC_MESSAGE = "message";
+	public static final String COLUMN_SYNC_IMAGE = "image";
+	public static final String COLUMN_SYNC_VIDEO = "video";
+
+
+	// create sync data table string
+	public	static final String SYNC_DATA_TABLE_CREATE = "create table "
+			+ TABLE_SYNC_DATA + " ( " + COLUMN_SYNC_ID
+			+ " integer primary key autoincrement, " + COLUMN_SYNC_PHONE_NO
+			+ " varchar(24)  DEFAULT NULL, "+ COLUMN_SYNC_TRAIN_NO
+			+ " varchar(50) DEFAULT NULL, "+ COLUMN_SYNC_DATE
+			+ " integer, "+ COLUMN_SYNC_LONGITUDE
+			+ " decimal(7,7) DEFAULT NULL, "+ COLUMN_SYNC_LATITUDE
+			+ " decimal(7,7) DEFAULT NULL, "+ COLUMN_SYNC_MESSAGE
+			+ " varchar(100), "+ COLUMN_SYNC_IMAGE
+			+ " varchar(100), "+ COLUMN_SYNC_VIDEO
+			+ " varchar(100) DEFAULT NULL);";
+
+
+
+
+
 	static final String GEOHASH_DATABASE_CREATE = "create table "
 			+ TABLE_GEOHASHES + "( " + COLUMN_ID
 			+ " integer primary key autoincrement, " + COLUMN_DESCRIPTION
@@ -41,6 +73,8 @@ public class TrainDbOpenHelper extends SQLiteOpenHelper implements Serializable 
 			+ " numeric DEFAULT NULL, "+ INCLUDE_IN_TRIP
 			+ " numeric DEFAULT 0, "+ COLUMN_ROUTE_NAME
 			+ " varchar(100) not null);";
+
+
 
 	public static String DB_PATH;
 	public static String DB_NAME;
@@ -137,12 +171,60 @@ public class TrainDbOpenHelper extends SQLiteOpenHelper implements Serializable 
 	public void onCreate(SQLiteDatabase db) {
 		db.execSQL("DROP TABLE IF EXISTS " + TrainDbOpenHelper.TABLE_GEOHASHES);
 		db.execSQL(TrainDbOpenHelper.GEOHASH_DATABASE_CREATE);
+		db.execSQL("DROP TABLE IF EXISTS " + TrainDbOpenHelper.TABLE_SYNC_DATA);
+		//		db.execSQL("create table sync_data (_id integer primary key autoincrement,phone_number varchar(24)  NOT NULL,train_number varchar(50) DEFAULT NULL,date_time integer,longitude decimal(7,7) DEFAULT NULL,latitude decimal(7,7) DEFAULT NULL,message varchar(100),image varchar(100),video varchar(100) not null);");
+		db.execSQL(TrainDbOpenHelper.SYNC_DATA_TABLE_CREATE);
+		Log.d("DATABASE HELPER", "all tables created");
 	}
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 	}
 
+	/*Insert data function for table sync_data*/
+	public long insertDetails(SyncData model)
+	{
+		// Gets the data repository in write mode
+		SQLiteDatabase db = getWritableDatabase();
+
+		// Create a new map of values, where column names are the keys
+		ContentValues values = new ContentValues();
+
+		values.put(COLUMN_SYNC_PHONE_NO, model.getPhoneNumber());
+		values.put(COLUMN_SYNC_TRAIN_NO, model.getTrainNumer());
+		values.put(COLUMN_SYNC_DATE, model.getDataTime());
+		values.put(COLUMN_LONGITUDE, model.getLongitude());
+		values.put(COLUMN_LATITUDE, model.getLatitude());
+
+		long newRowId;
+		newRowId = db.insert(
+				TABLE_SYNC_DATA,
+				null,
+				values);
+		return newRowId;
+	}
+
 	
-	
+	/*Retrieve data function for table sync_data*/
+	public SyncData getDetails() {
+		SQLiteDatabase db = this.getWritableDatabase();
+
+		Cursor cursor = db.query(TABLE_SYNC_DATA, new String[] {  COLUMN_SYNC_ID,
+				COLUMN_SYNC_PHONE_NO,  COLUMN_SYNC_TRAIN_NO,COLUMN_SYNC_DATE, COLUMN_SYNC_LONGITUDE,COLUMN_SYNC_LATITUDE,COLUMN_SYNC_MESSAGE
+				,COLUMN_SYNC_IMAGE,COLUMN_SYNC_VIDEO}, null,
+				new String[] {  }, null, null, null, null);
+		if (cursor != null)
+			cursor.moveToFirst();
+
+		SyncData model = new SyncData();
+		// return details
+		model.setDataTime(cursor.getString(3));
+		model.setLatitude(cursor.getString(5));
+		model.setLongitude(cursor.getString(4));
+		model.setPhoneNumber(cursor.getString(1));
+		model.setTrainNumer(cursor.getString(2));
+		return model;
+	}
+
+
 }

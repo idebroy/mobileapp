@@ -14,12 +14,16 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebView.FindListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ListView;
@@ -33,6 +37,7 @@ public class ChooseOriginFragment extends Fragment {
 	private SearchView changeOriginListview;
 	private AutoCompleteTextView chooseOriginTextview;
 	private Button doneButton;
+
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -52,9 +57,30 @@ public class ChooseOriginFragment extends Fragment {
 				Utils.getAllTrainStationsCursor(this.getActivity().getApplicationContext(),trainDbOpenHelper),
 				trainDbOpenHelper);
 		
-	//	Utils.getAllTrainStations(ctx, trainDbOpenHelper)
 
+
+		doneButton.setVisibility(View.INVISIBLE);
 		chooseOriginTextview.setAdapter(suggestionAdapter);
+		
+		
+	chooseOriginTextview.requestFocus();
+		InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+		imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
+	
+		
+		chooseOriginTextview.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View view, int position,
+					long arg3) {
+				// TODO Auto-generated method stub
+				
+				Log.d("ChooseOriginFragment","OnItemclick");
+				InputMethodManager mgr =      (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+				mgr.hideSoftInputFromWindow(chooseOriginTextview.getWindowToken(), 0);
+				doneButton.setVisibility(View.VISIBLE);
+			}
+		});
 	
 		
 		/*
@@ -73,13 +99,19 @@ public class ChooseOriginFragment extends Fragment {
 					}
 				}
 				
-				InputMethodManager mgr =      (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-				mgr.hideSoftInputFromWindow(arg0.getWindowToken(), 0);
+//				InputMethodManager mgr =      (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+//				mgr.hideSoftInputFromWindow(arg0.getWindowToken(), 0);
 				activity.onBackPressed();
 			}
 		});
 		
 		return v;
+	}
+	
+	@Override
+	public void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
 	}
 
 }

@@ -7,6 +7,7 @@ import com.idr.trvlr.sqlite.RouteDataSource;
 import com.idr.trvlr.sqlite.RouteDataSource.Train;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,19 +15,20 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 public class TrainListAdapter extends ArrayAdapter<RouteDataSource.Train>{
-	 private ArrayList<RouteDataSource.Train> allTrainPassingTroughStations;
-	 private Context context;
-	 
-	 
-	 /*Viewholder class*/
-		static class ViewHolder {
-
-	
-			private TextView TrainName;
-			private TextView TrainNumber;
+	private ArrayList<RouteDataSource.Train> allTrainPassingTroughStations;
+	private Context context;
+	private ViewHolder viewHolder;
 
 
-		}
+	/*Viewholder class*/
+	static class ViewHolder {
+
+
+		private TextView TrainName;
+		private TextView TrainNumber;
+
+
+	}
 
 	public TrainListAdapter(Context context,  ArrayList<RouteDataSource.Train> allTrainPassingTroughStations) {
 		super(context,android.R.layout.simple_list_item_1);
@@ -34,15 +36,15 @@ public class TrainListAdapter extends ArrayAdapter<RouteDataSource.Train>{
 		this.allTrainPassingTroughStations = allTrainPassingTroughStations;
 		// TODO Auto-generated constructor stub
 	}
-	
+
 	@Override
 	public int getCount() {
 		// TODO Auto-generated method stub
 		return allTrainPassingTroughStations.size();
-		
+
 	}
 
-	
+
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		// TODO Auto-generated method stub
@@ -53,24 +55,25 @@ public class TrainListAdapter extends ArrayAdapter<RouteDataSource.Train>{
 
 			LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) ;
 			trainItemView = inflater.inflate(R.layout.train_list_item,null) ;
-			
+
 			//holder object Initialization
 			ViewHolder	holder = new ViewHolder() ;
-			
+
 			holder.TrainName = (TextView) trainItemView.findViewById(R.id.train_name);
 			holder.TrainNumber = (TextView) trainItemView.findViewById(R.id.train_number);
-			
+
 			trainItemView.setTag(holder);
 
 		}
-		
+
 		// holder object regained from existing view
-		ViewHolder viewHolder = (ViewHolder) trainItemView.getTag();
-		
+		viewHolder = (ViewHolder) trainItemView.getTag();
+
 		//setting values
 		viewHolder.TrainName.setText(""+allTrainPassingTroughStations.get(position).getTrainName());
 		viewHolder.TrainNumber.setText(""+allTrainPassingTroughStations.get(position).getTrainNo());
-		
+
+		setCustomFont();
 		return trainItemView;
 	}
 
@@ -81,6 +84,25 @@ public class TrainListAdapter extends ArrayAdapter<RouteDataSource.Train>{
 	public void setAllTrainPassingTroughStations(
 			ArrayList<RouteDataSource.Train> allTrainPassingTroughStations) {
 		this.allTrainPassingTroughStations = allTrainPassingTroughStations;
+	}
+
+	private void setCustomFont() {
+
+		// regular Font path
+		String regularFontPath = "fonts/Roboto-Regular.ttf";
+
+
+		// thin path
+		String thinFontPath = "fonts/Roboto-Light.ttf";
+
+		// Loading Font Face
+		Typeface regularFont = Typeface.createFromAsset(context.getAssets(), regularFontPath);
+		Typeface thinFont = Typeface.createFromAsset(context.getAssets(), thinFontPath);
+
+		// Applying font
+		viewHolder.TrainName.setTypeface(thinFont);
+		viewHolder.TrainNumber.setTypeface(regularFont);
+
 	}
 	
 	

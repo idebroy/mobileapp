@@ -1,7 +1,10 @@
 package com.idr.trvlr.sqlite;
 
 import java.io.Serializable;
+import java.lang.reflect.Array;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -34,6 +37,8 @@ public class RouteDataSource   {
             TrainDbOpenHelper.COLUMN_SCHEDULED_TIME,TrainDbOpenHelper.COLUMN_ACTUAL_TIME,
             TrainDbOpenHelper.DISTANCE_FROM_PREV_STOP,TrainDbOpenHelper.INCLUDE_IN_TRIP,
             TrainDbOpenHelper.COLUMN_ROUTE_NAME};
+
+	private Cursor trainCursor;
 
     public static class TrainStation  {
         /**
@@ -352,6 +357,28 @@ public class RouteDataSource   {
 //        dbHelper.close();
     }
 
+    /*Testing sync_data table*/
+    public void insertValuesSyncTable()
+    {
+    	 ContentValues cv = new ContentValues();
+         cv.put(TrainDbOpenHelper.COLUMN_SYNC_MESSAGE,"Hi hello");
+         long res =dbHelper.database.insert(TrainDbOpenHelper.TABLE_SYNC_DATA, null, cv);
+//         dbHelper.database.endTransaction();
+         
+         if( res > 0){
+             Log.v(RouteDataSource.class.getName(),"Successful insert");
+         } else {
+             Log.v(RouteDataSource.class.getName(),"Failed  insert");
+         }
+    }
+    
+    public void getValuesSyncTable()
+    {
+    	Cursor cursor = dbHelper.database.rawQuery("Select message from sync_data", new String[]{});
+    	cursor.moveToFirst();
+    	Log.d("Sync Table cursor value", ""+cursor.getString(0)+"Count : "+cursor.getCount());
+    	
+    }
     /**
      * Gets all the trains passing through the station but not terminating at the it
      * @param station
@@ -359,14 +386,43 @@ public class RouteDataSource   {
      */
     public ArrayList<Train> getAllPassingTrains(String station){
         dbHelper.openDataBase();
+        
+    String [] dayOfWeek = {"sun","mon","tue","wed","thu","fri","sat"};
+        
+        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
+        Calendar calendar = Calendar.getInstance();
+        String MIN_TIME =  dateFormat.format(calendar.getTime());
+        
+        int TODAY = calendar.get(Calendar.DAY_OF_WEEK);
+        
+        calendar.add(Calendar.HOUR_OF_DAY, 5);
+        int DAY_AFTER_5HOURS = calendar.get(Calendar.DAY_OF_WEEK);
+
+        String MAX_TIME =  dateFormat.format(calendar.getTime());
+        
+        Log.d("RouteDataSource", "MIN_TIME : "+MIN_TIME+"MAX_TIME : "+MAX_TIME+"TODAY : "+TODAY+"DAY_AFTER_5HOURS : "+DAY_AFTER_5HOURS);
+        
         ArrayList<Train> trains = new ArrayList<Train>();
-        Cursor trainCursor = dbHelper.database.rawQuery("SELECT t._id,t.trainName,t.trainNO from station_table as s, " +
+        if(TODAY == DAY_AFTER_5HOURS)
+        {
+        trainCursor = dbHelper.database.rawQuery("SELECT t._id,t.trainName,t.trainNO from station_table as s, " +
                         "train_table as t, route_table as r where r.trainId=t._id and r.stationId=s._id and " +
-                        "s.stationName like ? and r._id NOT IN (SELECT r._id  from station_table as s, train_table as t, " +
+                        "s.stationName like ? and r.arrival BETWEEN ? and  ? and r._id NOT IN (SELECT r._id  from station_table as s, train_table as t, " +
                         "route_table as r where r.trainId=t._id and r.stationId=s._id group by t.trainName order by r._id)",
-                new String[]{"%" + station + "%"}
+                new String[]{"%" + station + "%",MIN_TIME,MAX_TIME}
         );
+        }
+        else
+        {
+        	 trainCursor = dbHelper.database.rawQuery("SELECT t._id,t.trainName,t.trainNO from station_table as s, " +
+                    "train_table as t, route_table as r where r.trainId=t._id and r.stationId=s._id and " +
+                    "s.stationName like ? and ((r.arrival BETWEEN ? and  ? and t." +dayOfWeek[TODAY]+"=1) or (r.arrival BETWEEN ? and  ? and t." +dayOfWeek[DAY_AFTER_5HOURS]+"=1))  and r._id NOT IN (SELECT r._id  from station_table as s, train_table as t, " +
+                    "route_table as r where r.trainId=t._id and r.stationId=s._id group by t.trainName order by r._id)",
+            new String[]{"%" + station + "%",MIN_TIME,"23:59","00:00",MAX_TIME}
+        	 );
+        }
        
+      
         if (trainCursor.getCount() > 0) {
             trainCursor.moveToFirst();
             while (!trainCursor.isAfterLast()) {
@@ -467,11 +523,7 @@ public class RouteDataSource   {
 				String stationName = stationCursor.getString(2);
 				String stationLatitude = stationCursor.getString(3);
 				String stationLongitude = stationCursor.getString(4);
-				
-				if(stationName.equalsIgnoreCase("shivajinagar"))
-				{
-					Log.d("RouteDatasource ", "Index number : "+trainStations.size());
-				}
+			
 				
 				RouteDataSource.TrainStation trainStation = new RouteDataSource.TrainStation(stationId,stationName,stationCode,stationLatitude,stationLongitude);
 				trainStations.add(trainStation);
