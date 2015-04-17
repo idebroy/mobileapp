@@ -1,8 +1,10 @@
 package com.idr.trvlr;
 
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 
@@ -60,7 +62,7 @@ public class SelectDestinationActivity extends Activity  implements LocationList
 	private TextView destStationText;
 	private LinearLayout bottomLayout;
 	private TextView bottomStationName;
-	private TextView bottomArrivalTime;
+	private TextView bottomSpeed;
 	private String sourceStation;
 	private String nextStation;
 	private ImageView shareIcon;
@@ -85,7 +87,7 @@ public class SelectDestinationActivity extends Activity  implements LocationList
 	private Intent intentService;
 	private ImageView optionsMenu;
 	private Location destinationLocation;
-	private TextView durationText;
+	private TextView destinationDistance;
 	private ImageView destinationPullDrawerImage;
 	private ImageView destinationPushDrawerImage;
 	private LinearLayout destinationDrawer;
@@ -93,6 +95,7 @@ public class SelectDestinationActivity extends Activity  implements LocationList
 	private LinearLayout actionBarTopLayout;
 	ObjectAnimator onjectAnimator;
 	private MyReceiver myReceiver;
+	Date initialDate;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -119,8 +122,8 @@ public class SelectDestinationActivity extends Activity  implements LocationList
 		destinationDrawer = (LinearLayout) findViewById(R.id.destination_drawer);
 		bottomLayout = (LinearLayout) findViewById(R.id.activity_destination_bottom_layout);
 		bottomStationName = (TextView) findViewById(R.id.activity_destination_bottom_sation_name);
-		bottomArrivalTime = (TextView) findViewById(R.id.activity_destination_bottom_estimated_time);
-		durationText = (TextView) findViewById(R.id.activity_destination_bottom_time);
+		bottomSpeed = (TextView) findViewById(R.id.activity_destination_bottom_estimated_time);
+		destinationDistance = (TextView) findViewById(R.id.activity_destination_bottom_time);
 		shareIcon = (ImageView) findViewById(R.id.activity_destination_share);
 		optionsMenu = (ImageView) findViewById(R.id.activity_destination_options_menu);
 		final EditText selectCoach = (EditText)findViewById(R.id.select_coach);
@@ -229,7 +232,8 @@ public class SelectDestinationActivity extends Activity  implements LocationList
 				adapter.notifyDataSetChanged();
 				bottomStationName.setText(routePointArray.get(positionOfDestination).getDescription());
 				setDestinationLocation(routePointArray.get(positionOfDestination).getLatitude(),routePointArray.get(positionOfDestination).getLongitude());
-				bottomArrivalTime.setText(""+time);
+				//bottomSpeed.setText(""+time);
+				bottomSpeed.setText("Calculating..");
 				
 				
 				distanceBetweenSourceDestination = calculateDistBetnSrcDest(sourceStation, routePointArray.get(positionOfDestination).getDescription());
@@ -309,8 +313,7 @@ public class SelectDestinationActivity extends Activity  implements LocationList
 				// TODO Auto-generated method stub
 				destinationPullDrawerImage.setVisibility(View.VISIBLE);
 				destinationDrawer.setVisibility(View.GONE);
-				//coachNoView.setVisibility(View.VISIBLE);
-				//coachNoView.setText(""+hashmap.get(coachTypeSpinner.getSelectedItem())+selectCoach.getText().toString() + " | "+selectBerth.getText().toString());
+				
 			}
 		});
 
@@ -442,7 +445,7 @@ public class SelectDestinationActivity extends Activity  implements LocationList
 						adapter.notifyDataSetChanged();
 						bottomStationName.setText(routePointArray.get(position).getDescription());
 						setDestinationLocation(routePointArray.get(position).getLatitude(),routePointArray.get(position).getLongitude());
-						bottomArrivalTime.setText(""+time);
+						bottomSpeed.setText("Calculating");
 					}
 					else
 					{
@@ -480,9 +483,7 @@ public class SelectDestinationActivity extends Activity  implements LocationList
 		Log.d("OnResume", "");
 
 
-		//locationManager.getBestProvider(criteria, enabledOnly)
-		//	locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME, 0, this);
-		//locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,MIN_TIME, 0, this);
+		
 	}
 
 	protected int calculateDistBetnSrcDest(String src,String dest) {
@@ -586,6 +587,7 @@ public class SelectDestinationActivity extends Activity  implements LocationList
 
 	public void tracETA(Location location)
 	{
+		
 
 		// TODO Auto-generated method stub
 		Log.d("SelectDestinationActivity","OnLocationChanged");
@@ -599,9 +601,15 @@ public class SelectDestinationActivity extends Activity  implements LocationList
 			lat = location.getLatitude();
 			lon = location.getLongitude();
 
-			currentLocation = new Location(LocationManager.GPS_PROVIDER);
+			currentLocation = new Location(LocationManager.NETWORK_PROVIDER);
 			currentLocation.setLatitude(lat);
 			currentLocation.setLongitude(lon);
+			
+			// get time
+			//SimpleDateFormat dateFormatOld = new SimpleDateFormat("dd MM yyyy hh:mm:ss aa");
+			Calendar calendarOld = Calendar.getInstance();
+			 initialDate = calendarOld.getTime();
+
 		}
 
 
@@ -609,47 +617,26 @@ public class SelectDestinationActivity extends Activity  implements LocationList
 		{
 
 			SimpleDateFormat dateFormatOld = new SimpleDateFormat("dd MM yyyy hh:mm:ss aa");
-			Calendar calendarOld = Calendar.getInstance();
+			Calendar calenderNew = Calendar.getInstance();
+			Date currentDate = calenderNew.getTime();
 
 
-			//	calendar.setTime(date)
-			calendarOld.setTimeInMillis((long) currentDateandTime);
-			String timeCurrent =  dateFormatOld.format(calendarOld.getTime());
-
-			calendarOld.setTimeInMillis((long) trainArrivalTime);
-			String arrivalTime =  dateFormatOld.format(calendarOld.getTime());
-
-
-			//	Log.d("SelectDestinationActivity", "currentDateandTime : "+timeCurrent+" trainArrivalTime  : "+arrivalTime);
 
 
 			/*Condition to start ETA*/
 
-			//	if(currentDateandTime > trainArrivalTime)
-			//	{
-
-
-			//double distance =  Utils.calculateDistanceInFLoat(lat, lon, location.getLatitude(), location.getLongitude());
+		
 			double distanceBetweenTwoLocation =  currentLocation.distanceTo(location);
 
 			currentLocation = location;
 
-			//bottomLayout.setVisibility(View.VISIBLE);
-			//	bottomStationName.setText(""+distanceBetweenTwoLocation + "meter"+"  "+ location.getLatitude()+","+location.getLongitude());
 
-
-			// calculate speed of train
-
-			// testing - let distance between two location is 50 m
-			//distanceBetweenTwoLocation = 50;
-			//totalDistanceCoveredByTrain = totalDistanceCoveredByTrain+distanceBetweenTwoLocation;
-
-			averageSpeedOfTrain = distanceBetweenTwoLocation / (LocationService.MIN_TIME/1000);
+			averageSpeedOfTrain = distanceBetweenTwoLocation / (getTimeDiff(initialDate,currentDate));
 			// convert it into km/hr
 			averageSpeedOfTrain = averageSpeedOfTrain * 18/5;
+			
+			averageSpeedOfTrain = Math.round(averageSpeedOfTrain);
 
-			// test - let speed of train be 100 km/hr
-			//averageSpeedOfTrain = 100; 
 
 
 
@@ -671,7 +658,7 @@ public class SelectDestinationActivity extends Activity  implements LocationList
 				calendarTest.setTimeInMillis((long) timeToReach);
 				String durationTime =  dateFormatTest.format(calendarTest.getTime());
 
-				durationText.setText(""+durationTime);
+				destinationDistance.setText(""+distanceFromCurrentToDestination+" Km");
 				Log.d("SelectDestinationActivity"," time to reach "+durationTime);
 
 
@@ -693,16 +680,14 @@ public class SelectDestinationActivity extends Activity  implements LocationList
 				calendar.setTimeInMillis((long) timeToReach);
 				String time =  dateFormat.format(calendar.getTime());
 
-				bottomArrivalTime.setText(""+ time);
+				// printing speed of train
+				bottomSpeed.setText(""+ averageSpeedOfTrain + " Km/H");
 
-				Log.d("SelectDestinationActivity", "distance between source and location : "+ distanceBetweenSourceDestination);
-
+			
 			}
 
 
-			Log.d("SelectDestinationActivity", "distance between source and location : "+ distanceBetweenSourceDestination);
-			Log.d("SelectDestinationActivity", "speed of train : "+averageSpeedOfTrain+"Distance between two location : "+distanceBetweenTwoLocation);
-
+		
 
 			//	}
 
@@ -731,5 +716,15 @@ public class SelectDestinationActivity extends Activity  implements LocationList
 
 		}
 
+	}
+	
+	public long getTimeDiff(Date dateOne, Date dateTwo) {
+		String diff = "";
+		long timeDiff = Math.abs(dateOne.getTime() - dateTwo.getTime());
+		timeDiff = timeDiff/1000;
+//		diff = String.format("%d h %d m", TimeUnit.MILLISECONDS.toHours(timeDiff),
+//				TimeUnit.MILLISECONDS.toMinutes(timeDiff) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(timeDiff)));
+		
+		return timeDiff;
 	}
 }

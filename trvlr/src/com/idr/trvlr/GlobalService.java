@@ -173,7 +173,7 @@ public class GlobalService  extends Service implements LocationListener{
 			JSONObject jsonObject = new JSONObject();
 			jsonObject.put("trainNumer", "8003");
 			jsonObject.put("phoneNumber", "9718979013");
-			jsonObject.put("dataTime", "2012-12-09 09:34:23.0");
+			jsonObject.put("dataTime", "2012-12-09 09:36:23.0");
 			jsonObject.put("latitude", "0.748476");
 			jsonObject.put("longitude", "0.748476");
 

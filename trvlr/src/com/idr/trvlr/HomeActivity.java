@@ -54,7 +54,7 @@ public class HomeActivity extends FragmentActivity {
 		Crashlytics.start(this);
 
 	
-		// Service
+		// Service to send data to server
 		Intent intent = new Intent(this,GlobalService.class);
 		//startService(intent);
 		

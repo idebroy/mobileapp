@@ -35,7 +35,7 @@
                 android:singleLine="true"
                 android:text="Select Destination"
                 android:textColor="@color/white"
-                android:textSize="@dimen/text_size_22" />
+                android:textSize="@dimen/text_size_20" />
 
             <TextView
                 android:id="@+id/activity_select_destination_train_number"
@@ -45,7 +45,7 @@
                 android:singleLine="true"
                 android:text="Select Destination"
                 android:textColor="@color/white"
-                android:textSize="@dimen/text_size_22" />
+                android:textSize="@dimen/text_size_20" />
         </LinearLayout>
 
         <ImageView
@@ -268,7 +268,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="Duration"
+                android:text="Distance Left"
                 android:textColor="#ffffff"
                 android:textSize="@dimen/text_size_18" />
 
@@ -277,7 +277,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="calculating"
+                android:text="Calculating"
                 android:textColor="#ffffff"
                 android:textSize="@dimen/text_size_18" />
         </LinearLayout>
@@ -335,7 +335,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="ETA"
+                android:text="Speed"
                 android:textColor="#ffffff"
                 android:textSize="@dimen/text_size_18" />
 

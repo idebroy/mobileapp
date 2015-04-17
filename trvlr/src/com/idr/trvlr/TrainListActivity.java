@@ -18,12 +18,15 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -32,6 +35,9 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
+import android.widget.Toast;
 
 import com.idr.trvlr.sqlite.RouteDataSource;
 import com.idr.trvlr.sqlite.RoutePoint;
@@ -162,6 +168,25 @@ public class TrainListActivity extends Activity implements Serializable{
 				// TODO Auto-generated method stub
 
 			}
+		});
+		
+		// go button listner on keyboard
+		searchEditText.setOnEditorActionListener(new OnEditorActionListener() {
+		    @Override
+		    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+		        boolean handled = false;
+		        if (actionId == EditorInfo.IME_ACTION_GO) {
+		          
+		        	
+		        	InputMethodManager imm = (InputMethodManager) TrainListActivity.this.getSystemService(Context.INPUT_METHOD_SERVICE);
+		    		imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
+		        	
+		            handled = true;
+		        }
+		        return handled;
+		    }
+
+			
 		});
 
 		

@@ -64,7 +64,8 @@ public class LocationService extends Service implements LocationListener {
  public static Context context;
  private static Intent myIntent;
  final static String MY_ACTION = "MY_ACTION";
- public static long MIN_TIME = 5000;
+ public static long MIN_TIME = 10000;
+ private boolean didSpeak = false;
 
 
 
@@ -84,7 +85,7 @@ public class LocationService extends Service implements LocationListener {
 		routePointArray = new ArrayList<RoutePoint>();
 		routePointArray.clear();
 		locationManager =(LocationManager)getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
-		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME, 0, this);
+	//	locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME, 0, this);
 		locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,MIN_TIME, 0, this);
 		
 		
@@ -137,6 +138,7 @@ public class LocationService extends Service implements LocationListener {
 			    .setContentText("Searching Next Station");
 	 
 	 mBuilder.setSmallIcon(R.drawable.loading, 10);
+	
 			    
 		
 		//mBuilder.add
@@ -167,11 +169,11 @@ public class LocationService extends Service implements LocationListener {
 		);
 		
 		mBuilder.setContentIntent(resultPendingIntent);
-		//mBuilder.
+
 		
 		
 		Intent speechIntent = new Intent(getApplicationContext(),ToggleSpeechOutput.class);
-		CharSequence charSeq = "zxcd";
+	
 		
 		PendingIntent speechPendingIntent =
 			    PendingIntent.getBroadcast(
@@ -180,10 +182,6 @@ public class LocationService extends Service implements LocationListener {
 			    speechIntent,
 			    PendingIntent.FLAG_UPDATE_CURRENT
 			);
-		//mBuilder.addAction(R.drawable.ic_launcher, charSeq, speechPendingIntent);
-		
-		//notificationView.get
-	//	notificationManager.notify(001, mBuilder.build());
 
 
 		return Service.START_NOT_STICKY;
@@ -218,7 +216,6 @@ public class LocationService extends Service implements LocationListener {
 
 
 
-		//	 textToSpeechInstance.speak("Hello rupam, Hi Puja,Hi ARun, Hi ankit", TextToSpeech.QUEUE_FLUSH, null);
 		// get current location for the first time
 		if(count==0)
 		{
@@ -228,7 +225,7 @@ public class LocationService extends Service implements LocationListener {
 			lat = location.getLatitude();
 			lon = location.getLongitude();
 
-			currentLocation = new Location(LocationManager.GPS_PROVIDER);
+			currentLocation = new Location(LocationManager.NETWORK_PROVIDER);
 			currentLocation.setLatitude(lat);
 			currentLocation.setLongitude(lon);
 		}
@@ -252,9 +249,9 @@ public class LocationService extends Service implements LocationListener {
 			// calculate speed of train
 
 			// test - let distance between two location is 10 km
-			distanceBetweenTwoLocation = 10;
+		//	distanceBetweenTwoLocation = 10;
 			totalDistanceCoveredByTrain = totalDistanceCoveredByTrain + distanceBetweenTwoLocation;
-			totalTimeTaken = totalTimeTaken + 1;
+			totalTimeTaken = totalTimeTaken + MIN_TIME;
 			averageSpeedOfTrain = totalDistanceCoveredByTrain/totalTimeTaken;
 
 			// convert it into km/hr
@@ -263,15 +260,6 @@ public class LocationService extends Service implements LocationListener {
 			// test - let speed of train be 100 km/hr
 			//	averageSpeedOfTrain = 100;
 
-
-
-
-			//getNextStaion();
-
-			//currentLocation.setLatitude(19.1724);
-			//	currentLocation.setLongitude(72.9570);
-
-			//	getGeoNextStation(currentLocation);
 
 			getGeoNextNewStation(currentLocation);
 
@@ -298,11 +286,7 @@ public class LocationService extends Service implements LocationListener {
 		distnceToNextStation = currentLocation2.distanceTo(nextStationLocation);
 		distnceToNextStation = Math.round(distnceToNextStation/1000);
 
-		CharSequence charSeq1 = "Next station : "+nextStation;
-		CharSequence charSeq2 = distnceToNextStation+ " Kms";
-		mBuilder.setContentText(charSeq2);
-		mBuilder.setContentTitle(charSeq1);
-		notificationManager.notify(002, mBuilder.build());
+		
 		
 		// if distance is less then 5km ...speech op enables
 		if(distnceToNextStation<5 && distnceToNextStation>0)
@@ -311,7 +295,30 @@ public class LocationService extends Service implements LocationListener {
 			
 			if(speechOutput)
 			{
-			textToSpeechInstance.speak("Next station is "+nextStation+"and distance is : "+distnceToNextStation+"Kilometers", TextToSpeech.QUEUE_FLUSH, null);
+				if(distnceToNextStation<1)
+				{
+					didSpeak = false;
+				}
+				
+				// prevents looping of speech output
+				if(!didSpeak)
+				{
+					//TODO - Notofication should be notified only once
+					CharSequence charSeq1 = "Next station : "+nextStation;
+					CharSequence charSeq2 = distnceToNextStation+ " Kms";
+					mBuilder.setContentText(charSeq2);
+					mBuilder.setContentTitle(charSeq1);
+					notificationManager.notify(002, mBuilder.build());
+					
+					
+					textToSpeechInstance.speak("Next station is "+nextStation+"and distance is : "+distnceToNextStation+"Kilometers", TextToSpeech.QUEUE_FLUSH, null);
+				didSpeak = true;
+				}
+				
+				
+				
+				
+				
 			}
 		}
 		else
@@ -359,7 +366,7 @@ public class LocationService extends Service implements LocationListener {
 	public void onTaskRemoved(Intent rootIntent) {
 		// TODO Auto-generated method stub
 		super.onTaskRemoved(rootIntent);
-		Log.d("Service", "On TaskRemoved");
+
 		stopSelf();
 	}
 

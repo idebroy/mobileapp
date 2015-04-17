@@ -499,6 +499,13 @@ public class RouteDataSource   {
     	double latitude1 = latitude - 57.3*(distance/3959);
     	double latitude2 = latitude + 57.3*(distance/3959);
     	
+//    	double longitude1 =100.0000 -57.3*( Math.asin(Math.sin(distance/3959)/Math.cos(Math.PI*latitude/180)));
+//    	double longitude2 =100.0000 + 57.3*( Math.asin(Math.sin(distance/3959)/Math.cos(Math.PI*latitude/180)));
+//    	
+//    	
+//    	double latitude1 = 31.000 - 57.3*(distance/3959);
+//    	double latitude2 = 31.000 + 57.3*(distance/3959);
+    	
 		// TODO Auto-generated method stub
 		final String query = "select _id,stationCode,stationName,latitude,longitude from station_table  where "+
 				"(latitude >= "+latitude1+") AND "+
